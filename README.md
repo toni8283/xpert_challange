@@ -1,119 +1,120 @@
-# Evidence-first WhatsApp Cold Start
+# Xpert Cold Start — Evidence-First WhatsApp Understanding
 
-A Python 3.9+ solution to the [Xpert Cold Start challenge](https://goals.xpert.chat/w/intern): infer people and organisations, find grounded goals, and track tasks without hiding unfinished work.
+A Python 3.9+ solution for the [Xpert Winter Internship 2026 Cold Start challenge](https://goals.xpert.chat/w/intern). It turns WhatsApp conversation history into structured information about **people, organisations, chats, goals, and tasks**, including evidence-backed decisions about when an assistant should intervene.
 
-**No pip dependencies.** The required entry point is unchanged:
+The submitted release is **deterministic and offline by default**. An optional OpenAI-compatible model pipeline is implemented separately, but has **not** been live-benchmarked.
+
+## Results at a glance
+
+| Metric | Verified development result |
+| --- | ---: |
+| Official development checker | **26.0081 / 56** |
+| Published Xpert model baseline | 17.5 / 56 |
+| Automated tests | **62 passed** |
+| LLM requests in the evaluated offline run | **0** |
+| Model cost per 1,000 messages | **$0** |
+| Development input | 4,502 messages, 138 chats |
+
+The results above are from the *provided development set*, not the hidden evaluation. The Xpert baseline uses a different implementation; the comparison is only on the shared development score. See [EVALUATION.md](EVALUATION.md) and the aggregate [development report](reports/dev-offline.json) for the breakdown and limitations.
+
+## Quick start
+
+**Requirements:** Python 3.9+, Bash, and the Python standard library. No package installation is needed.
+
+The grading interface is:
 
 ```bash
 ./run.sh <input_dir> <output.json>
 ```
 
-Start with [START_HERE.md](START_HERE.md) for testing and submission. [WRITEUP.md](WRITEUP.md) explains the approach and measured failures.
-
-Restored and revalidated after the workspace disconnect: **62 tests pass**. The release excludes all supplied datasets and answer keys.
-
-## Measured results
-
-On the supplied 4,502-message dev set, **offline rules score 26.01 / 56 with zero API calls**. The starter checker and schema are byte-for-byte unchanged. The challenge page reports 17.5 / 56 for its model baseline. These are dev results; hidden-set performance is unknown.
-
-| Part | Offline points |
-|---|---:|
-| Circles | 8.20 / 12 |
-| Organisations | 2.61 / 8 |
-| Chat attachments | 6.73 / 8 |
-| Loops found | 3.74 / 14 |
-| Loop status | 4.73 / 14 |
-| Goals / help | Unlabelled in dev |
-| Total measured | **26.01 / 56** |
-
-The **model-assisted path is implemented but not live-benchmarked**: no model API credentials were available during development. Its API protocol, caching and end-to-end assembly are tested with a local simulated server, which establishes mechanics rather than model quality. Do the live benchmark before claiming model performance. Aggregate evidence is in [reports/dev-offline.json](reports/dev-offline.json). Current verification is in [EVALUATION.md](EVALUATION.md).
-
-## Run locally
-
-The input folder contains `chats.jsonl`, `messages.jsonl`, and optional `seed.json`. Inference never reads an answer key. The evaluation script reads it separately.
+To generate a **fictional** test input, run the solution, and validate its output:
 
 ```bash
-# Generate fresh fictional input; no key required.
 python3 scripts/make_example.py example
+mkdir -p artifacts
 ./run.sh example artifacts/example.json
 python3 check.py example artifacts/example.json
+```
 
-# After extracting the challenge data into data/dev/:
-python3 scripts/benchmark.py data/dev --mode offline
+Run the automated tests:
 
-# Synthetic-only free-model check; hidden input in an interactive terminal.
-python3 scripts/probe_free_model.py --ask-key
-# Real-data model benchmark requires separate privacy/transmission authorisation.
-# Set the official LLM_* variables, then use --mode model.
-
-# Tests: synthetic conversations only, no paid requests.
+```bash
 python3 -m unittest discover -s tests -v
 ```
 
-The shipped `run.sh` defaults to the measured offline path, including when the grader supplies credentials. For an explicitly authorised model run set `XPERT_MODE=model` plus `LLM_BASE_URL`, `LLM_API_KEY`, and `LLM_MODEL`. Calling `solution.py` directly uses auto mode unless overridden: all three variables select the configured model; no configuration selects offline. `LLM_MODEL=none` or `offline` also selects offline in auto mode. Partial configuration produces a clear error. Provider/model failures fall back to deterministic batches with explicit degradation metrics. Local call/time-budget exhaustion retains completed model work and uses deterministic predictions for unprocessed batches, with that reduction recorded in the run report. `XPERT_MODE=model` explicitly requires a model. `XPERT_MODE=offline` explicitly disables calls.
+For an authorised **local** development benchmark, place the supplied challenge input privately under `data/dev/` and run:
 
-The user-requested optional model to **test** is `baidu/ernie-5.5-flash-preview:free` through `https://openrouter.ai/api/v1`. `.env.example` documents the variables; `.env` files are not auto-loaded. Any model change needs its own benchmark.
+```bash
+python3 scripts/benchmark.py data/dev --mode offline
+```
 
-## How it works
+The program reads `chats.jsonl`, `messages.jsonl`, and optional `seed.json` from the input directory. The official development checker reads answer keys separately; inference itself does not.
 
-| Stage | Evidence and purpose | Implementation |
-|---|---|---|
-| Input | Sort by source time; preserve stable IDs, voice text, seeds, saved-name aliases and cross-chat membership | `coldstart/data.py` |
-| Organisation graph | Sample both ends and action-bearing turns; merge project/client groups under the user's organisations | `coldstart/rules.py`, graph prompt |
-| Person dossiers | Combine direct and group evidence per ID; keep supplied circles authoritative and apply user corrections | People prompt, `normalize.py` |
-| Task extraction | Read chronological windows with overlapping context; batch short chats; preserve a source for each task | Loop prompt, `pipeline.py` |
-| Closure review | Retrieve subsequent same-chat evidence for unresolved tasks; preserve source/owner and require a later closing message | Closure prompt, `normalize.py` |
-| Goals and help | Deduplicate durable user goals with real ME evidence; choose private assistance, a reminder, or silence | Goal prompt, `policy.py` |
+## Output contract
 
-A message can contain several tasks; repeated paraphrases are merged conservatively. Amounts are included in deduplication, so different payments do not collapse just because both say "pay". Bare acknowledgement does not close an execution task. A genuine answer can close a decision question. No closure is inferred just because a due date passed.
-
-Direct staff/colleague chats can attach to a relevant organisation. Recent windows run first when inference budget is scarce. The entire history is considered; earlier loops are not discarded using an estimated scoring window. The grader alone knows that window. Time calculations use the final input timestamp and IST, making reruns independent of the machine date.
-
-The offline baseline uses the same input/policy guards, simple role language and group overlap. It deliberately emits no inferred goals. It is a measurable fallback, not a substitute for semantic evaluation.
-
-## Cost and runtime controls
-
-Responses are cached by endpoint, model, prompt and generation settings. Optional transport JSON mode is excluded from the cache key to survive providers that reject it; every cached value is still a complete parsed JSON object. Only cache misses call the model. Caches contain inferred private information and must not be committed or shared.
-
-| Variable | Default | Purpose |
-|---|---|---|
-| `XPERT_WORKERS` | `4` | Concurrent independent batches, capped at 8 |
-| `XPERT_TIME_BUDGET_SECONDS` | `1500` | Stop issuing calls before the 30-minute grading limit |
-| `XPERT_MAX_CALLS` | `200` (`40` for OpenRouter `:free`) | Bound API request attempts |
-| `XPERT_CHUNK_MESSAGES` | `120` | Maximum source messages per window |
-| `XPERT_CHUNK_CHARS` | `18000` | Additional character limit per window |
-| `LLM_MAX_OUTPUT_TOKENS` | `11000` | Extraction completion cap |
-| `LLM_JSON_MODE` | `1` | Try JSON mode; retry without it if rejected |
-| `XPERT_CACHE_DIR` | `.xpert-cache` beside output | Private response cache |
-| `XPERT_CORRECTIONS` | unset | JSON file of explicit user corrections |
-
-Each output has a sibling `<stem>.run/` directory with fresh `usage.jsonl` and `report.json`: actual returned token counts, cache hits, request attempts, phase totals, time and counts. No API key or raw prompt is written there. Unsuccessful HTTP attempts may have no provider token usage; cost estimates cannot recover tokens that a provider did not report. Invalid JSON gets bounded retries; rate limits/temporary provider failures use backoff; request timeouts are bounded; off-endpoint redirects are refused. A provider failure is recorded as `model_degraded` / `model_error_fallback_batches` and the affected stage uses a deterministic fallback; cached successful batches remain reusable. Local budget exhaustion is handled separately: remaining batches fall back and `budget_exhausted` is recorded instead of losing the output.
-
-Optional model-mode cost-estimate defaults retain the older GPT-OSS assumption of $0.15/M input and $0.60/M output, observed at the [OpenRouter models API](https://openrouter.ai/api/v1/models) on 12 November 2026. Override `LLM_INPUT_PRICE_PER_MILLION` and `LLM_OUTPUT_PRICE_PER_MILLION` when appropriate. Set both prices to zero for a verified free-only test; assessment costing uses the paid equivalent. These are estimates, not a measured model bill or a guarantee about future prices. Offline cost is exactly zero.
-
-## Apply a correction
-
-Create a private JSON file, using IDs from your input/output:
+The program writes a single JSON object with these five arrays:
 
 ```json
 {
-  "people": {"synthetic-person-a": {"circle": "client"}},
-  "chats": {"synthetic-chat-a": {"person": "synthetic-person-b"}}
+  "people": [],
+  "organisations": [],
+  "chats": [],
+  "goals": [],
+  "open_loops": []
 }
 ```
 
+- **People:** relationship circles, organisation links, and care relationships.
+- **Organisations:** user-associated businesses, homes, schools, and other groups.
+- **Chats:** exactly one person or organisation association per conversation.
+- **Goals:** supported longer-term goals with original message IDs as evidence.
+- **Open loops:** commitments, follow-ups, deadlines, and decisions, including ownership, status, closure evidence, and whether to `assist`, `remind`, or `leave`.
+
+The supplied [schema](schema.json) and [checker](check.py) validate output structure and references.
+
+## Approach and code layout
+
+| Component | Responsibility |
+| --- | --- |
+| [`solution.py`](solution.py) and [`run.sh`](run.sh) | Stable command-line entry point and execution-mode selection |
+| [`coldstart/data.py`](coldstart/data.py) | Load messages, preserve source IDs, handle voice transcripts, and build chronological indexes |
+| [`coldstart/rules.py`](coldstart/rules.py) | Offline relationship, organisation, chat, and task inference |
+| [`coldstart/pipeline.py`](coldstart/pipeline.py) | Optional multi-stage model-assisted extraction and evidence retrieval |
+| [`coldstart/normalize.py`](coldstart/normalize.py) and [`coldstart/schema_guard.py`](coldstart/schema_guard.py) | Normalize output and reject unsupported references or invalid structures |
+| [`coldstart/policy.py`](coldstart/policy.py) | Decide when assistance, reminders, or non-intervention are appropriate |
+| [`llm.py`](llm.py) | OpenAI-compatible API transport, retries, and usage accounting |
+| [`tests/`](tests) | Synthetic regression tests and integration checks |
+
+The implementation favors **source-grounded predictions**. Task status is based on later evidence, rather than treating an acknowledgement, expired deadline, or promise as proof of completion. It preserves stable IDs, applies known seed relationships, and avoids hard-coding development identities or answer labels. Assistance recommendations describe a next step; they do not execute external actions.
+
+## Model support (optional)
+
+The grading entry point `run.sh` **defaults to offline inference**, even if the evaluator provides model credentials. To opt into the model pipeline, explicitly set `XPERT_MODE=model` and supply these environment variables securely:
+
+- `LLM_BASE_URL` — OpenAI-compatible API endpoint
+- `LLM_API_KEY` — provider credential
+- `LLM_MODEL` — exact model ID
+
+Then run:
+
 ```bash
-XPERT_CORRECTIONS=/absolute/path/corrections.json ./run.sh example artifacts/corrected.json
+XPERT_MODE=model ./run.sh <input_dir> <output.json>
 ```
 
-These illustrative synthetic IDs must be replaced with IDs from your own input. Explicit corrections outrank seed circles; seed circles outrank model guesses. Changed inputs/correction context change cache keys. A correction cannot introduce an unknown ID, circle or organisation. Rerun tests and compare aggregate reports after changing policy or prompts.
+The documented optional OpenRouter candidate is `baidu/ernie-5.5-flash-preview:free`. **It has not been live-tested**, and the measured 26.0081/56 score does **not** come from that model. The optional code includes bounded requests, private caching, schema guards, and deterministic degradation handling. See [MODEL_SELECTION.md](MODEL_SELECTION.md) for the provider compatibility and privacy caveats.
 
-## Known limits
+No model key is needed to reproduce the submitted offline behavior.
 
-Offline matching-source precision is 16.8%, recall 64.9%; sparse contacts and everyday conversational asks remain difficult. Model-specific error rates, cost and full-size runtime have not been measured. Goal/help quality cannot be evaluated on the dev labels. Retrieval can miss a closure in another chat, a distant paraphrase or an omitted media attachment. Large forwards are trimmed; this saves cost but can lose a real task buried inside a forward. The dev key has duplicates, conflicting statuses and no closing evidence for its 49 done labels; these limitations are documented, not repaired or exploited.
+## Known limitations
 
-## Data and AI use
+Development task matching has **16.8% matching-source precision** and **64.9% recall** against the provided labels. Indirect requests, multilingual phrasing, ambiguous task owners, and cross-chat completion evidence remain challenging. Offline mode deliberately does **not** infer additional goals; goal and assistance quality are not labelled in the development checker. Hidden-set performance is unknown.
 
-Do not commit the real challenge data, output predictions, caches or credentials. The ZIP contains only code, documentation, aggregate metrics and synthetic test/generation code. All supplied datasets, including the starter example and every answer key, are excluded. All inference network traffic goes only to the configured model endpoint; there is no scraping, web search, telemetry or WhatsApp automation in the submitted code. Generated help is a recommendation, not execution of an action. Delete the challenge data and private caches after the challenge as requested by its organisers.
+For measured failure categories and cost assumptions, see the required [WRITEUP.md](WRITEUP.md).
 
-`ai-logs/final-work-session.md` records this final continuation. `ai-logs/session.md` is a recovered record of the earlier AI collaboration; `ai-logs/recovery-session.md` records this restoration; `ai-logs/engineering-notes.md` separately records decisions and observed checks. Raw tool payloads containing challenge chats are excluded. Add the actual exports of any later AI sessions you use.
+## Privacy, reproducibility, and AI development records
+
+The repository excludes challenge conversation datasets, answer keys, generated private predictions, model caches, and API credentials. Do not commit those files or transmit private conversations to an unapproved model provider. The code uses the configured model endpoint only in explicitly enabled model mode.
+
+The required [`ai-logs/`](ai-logs) directory contains authentic development-session records and clearly marked partial transcripts. These logs are part of the assessment's AI-tool transparency requirements.
+
+Additional documentation: [submission guide](SUBMISSION.md) · [evaluation report](EVALUATION.md) · [model-selection notes](MODEL_SELECTION.md) · [interview preparation](INTERVIEW_PREP.md).
