@@ -1,0 +1,41 @@
+# The challenge data stays on your machine. Never commit it.
+data/
+*.zip
+usage.jsonl
+output.json
+.env
+__pycache__/
+
+# Private model responses, generated predictions, temporary runs, credentials.
+artifacts/
+*.run/
+.xpert-cache/
+.cache/
+*.pyc
+.env.*
+!.env.example
+*.tmp
+*.log
+out.json
+
+# A real-data transcript/output must not accidentally be committed under a new name.
+messages.jsonl
+chats.jsonl
+seed.json
+answers/
+
+# Exclude every supplied input and answer, including the example.
+example/
+*.jsonl
+**/answers/
+*.bundle
+
+# Root predictions and credential/answer files under arbitrary local names.
+/*.json
+!/schema.json
+answers.json
+answer*.json
+*.key
+*.pem
+credentials*.json
+secrets*.json

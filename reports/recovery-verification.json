@@ -1,0 +1,12 @@
+{
+  "tests_passed": 40,
+  "clean_python_without_site_packages": true,
+  "fresh_generated_example": true,
+  "output_path_with_spaces": true,
+  "dev_output_reproduced_exactly": true,
+  "original_checker_and_schema_unchanged": true,
+  "private_data_and_secret_audit_passed": true,
+  "synthetic_scale_messages": 20000,
+  "live_model_tested": false,
+  "github_published": false
+}

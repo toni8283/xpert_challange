@@ -1,0 +1,45 @@
+{
+  "checked_on": "2026-11-12",
+  "source": "https://openrouter.ai/api/v1/models",
+  "observed": {
+    "id": "baidu/ernie-5.5-flash-preview:free",
+    "context_length": 1024000,
+    "pricing": {
+      "prompt": "0",
+      "completion": "0"
+    },
+    "top_provider": {
+      "context_length": 1024000,
+      "max_completion_tokens": 921600,
+      "is_moderated": false
+    },
+    "supported_parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "reasoning_effort",
+      "response_format",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_p"
+    ],
+    "reasoning": {
+      "mandatory": true,
+      "default_enabled": true,
+      "supported_efforts": [
+        "high"
+      ],
+      "default_effort": "high"
+    }
+  },
+  "provider": "Baidu",
+  "privacy_suitability": "Not established from endpoint metadata; no real dataset sent.",
+  "free_limits": "20 requests/minute; ordinarily 50 requests/day without qualifying purchased credits.",
+  "policy_sources": [
+    "https://openrouter.ai/collections/free-models",
+    "https://openrouter.ai/docs/features/provider-routing",
+    "https://openrouter.ai/privacy"
+  ]
+}

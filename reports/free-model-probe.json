@@ -1,0 +1,10 @@
+{
+  "model": "baidu/ernie-5.5-flash-preview:free",
+  "input": "Built-in invented messages only",
+  "private_dataset_sent": false,
+  "paid_fallback_allowed": false,
+  "real_model_called": false,
+  "catalog_verified_free": true,
+  "context_length": 1024000,
+  "status": "blocked_missing_credentials"
+}

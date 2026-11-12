@@ -1,0 +1,146 @@
+{
+  "mode": "offline",
+  "model": null,
+  "messages": 4502,
+  "chats": 138,
+  "score_fractions": {
+    "circles": 0.6829268292682927,
+    "organisations": 0.32597514457979576,
+    "chats": 0.8414634146341463,
+    "goals": null,
+    "loops_found": 0.26740947075208915,
+    "loops_closed": 0.33783783783783783,
+    "help": null
+  },
+  "score_points": {
+    "circles": 8.195121951219512,
+    "organisations": 2.607801156638366,
+    "chats": 6.7317073170731705,
+    "goals": null,
+    "loops_found": 3.7437325905292482,
+    "loops_closed": 4.72972972972973,
+    "help": null
+  },
+  "total": 26.008092745190027,
+  "possible": 56,
+  "seconds": 0.774,
+  "usage": {
+    "api_calls": 0,
+    "cache_hits": 0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0
+  },
+  "cost_estimate": {
+    "usd": 0,
+    "usd_per_1000_messages": 0
+  },
+  "loop_diagnostics": {
+    "predicted": 285,
+    "labelled": 74,
+    "matched": 48,
+    "matching_source_precision": 0.16842105263157894,
+    "matching_source_recall": 0.6486486486486487,
+    "matched_status_correct": 25,
+    "false_closures_of_labelled_open": 0,
+    "unique_label_source_sets": 63,
+    "labels_without_closing_evidence": 49
+  },
+  "circle_confusion": [
+    {
+      "actual": "client",
+      "predicted": "client",
+      "count": 5
+    },
+    {
+      "actual": "client",
+      "predicted": "friend",
+      "count": 1
+    },
+    {
+      "actual": "colleague",
+      "predicted": "colleague",
+      "count": 8
+    },
+    {
+      "actual": "colleague",
+      "predicted": "friend",
+      "count": 2
+    },
+    {
+      "actual": "friend",
+      "predicted": "friend",
+      "count": 5
+    },
+    {
+      "actual": "parent",
+      "predicted": "relative",
+      "count": 1
+    },
+    {
+      "actual": "partner",
+      "predicted": "friend",
+      "count": 2
+    },
+    {
+      "actual": "relative",
+      "predicted": "client",
+      "count": 1
+    },
+    {
+      "actual": "relative",
+      "predicted": "colleague",
+      "count": 1
+    },
+    {
+      "actual": "relative",
+      "predicted": "friend",
+      "count": 2
+    },
+    {
+      "actual": "relative",
+      "predicted": "relative",
+      "count": 4
+    },
+    {
+      "actual": "sibling",
+      "predicted": "relative",
+      "count": 1
+    },
+    {
+      "actual": "sibling",
+      "predicted": "sibling",
+      "count": 1
+    },
+    {
+      "actual": "spouse",
+      "predicted": "spouse",
+      "count": 1
+    },
+    {
+      "actual": "staff",
+      "predicted": "colleague",
+      "count": 1
+    },
+    {
+      "actual": "staff",
+      "predicted": "friend",
+      "count": 1
+    },
+    {
+      "actual": "staff",
+      "predicted": "staff",
+      "count": 1
+    },
+    {
+      "actual": "vendor",
+      "predicted": "vendor",
+      "count": 3
+    }
+  ],
+  "notes": [
+    "Official checker and answer key are unchanged.",
+    "Goals/help absent from dev labels are unmeasured, not zero.",
+    "A local fixture test verifies API mechanics, not model quality.",
+    "Only aggregate counts are exported; never commit output JSON, caches, or challenge chats."
+  ]
+}

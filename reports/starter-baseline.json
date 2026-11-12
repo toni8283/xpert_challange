@@ -1,0 +1,14 @@
+{
+  "points": {
+    "circles": 1.4634146341463414,
+    "organisations": 0.10104166666666667,
+    "chats": 3.8048780487804876,
+    "goals": null,
+    "loops_found": 0.0,
+    "loops_closed": 0.0,
+    "help": null
+  },
+  "total": 5.369334349593496,
+  "possible": 56,
+  "mode": "offline"
+}

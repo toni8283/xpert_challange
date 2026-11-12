@@ -1,0 +1,28 @@
+{
+  "tests_passed": 62,
+  "runtime_python": "3.12.14",
+  "python_39_grammar_files": 18,
+  "actual_python39_execution": false,
+  "synthetic_stress_messages": 20000,
+  "synthetic_stress_chats": 320,
+  "fresh_generated_example_valid": true,
+  "no_site_packages_execution": true,
+  "run_sh_executable": true,
+  "run_sh_default": "offline",
+  "official_llm_variables_supported_in_explicit_model_mode": true,
+  "official_checker_and_schema_unchanged": true,
+  "offline_score": 26.008092745190027,
+  "score_possible": 56,
+  "provider_api_calls": 0,
+  "provider_cost_usd": 0,
+  "live_model_tested": false,
+  "collaborator_invited": false,
+  "official_form_submitted": false,
+  "writeup_words": 541,
+  "history_audit": {
+    "historical_unique_blobs": 55,
+    "findings": []
+  },
+  "github_published_at_validation_time": false,
+  "publication_target": "https://github.com/toni8283/xpert_challange"
+}

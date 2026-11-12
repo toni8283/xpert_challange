@@ -1,0 +1,32 @@
+[xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote renamed.json: 5 people, 2 organisations, 2 loops in 0.01s
+[xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote first.json: 5 people, 2 organisations, 2 loops in 0.00s
+[xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote second.json: 5 people, 2 organisations, 2 loops in 0.00s
+[xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote result.json: 5 people, 2 organisations, 2 loops in 0.00s
+[xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote large-output.json: 320 people, 1 organisations, 2560 loops in 0.76s
+[xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote offline.json: 5 people, 2 organisations, 2 loops in 0.00s
+[xpert] 1/5 Building the organisation graph
+[xpert] 2/5 Classifying people from their cross-chat dossiers
+[xpert] 3/5 Extracting tasks in chronological conversation windows
+[xpert] 4/5 Reviewing unresolved tasks against later evidence
+[xpert] 5/5 Selecting grounded goals and validating output
+[xpert] Wrote budget-output.json: 5 people, 2 organisations, 2 loops in 0.00s
+[xpert] 1/5 Building the organisation graph
+[xpert] Model request failed in graph; using deterministic fallback (ModelError)
+[xpert] 2/5 Classifying people from their cross-chat dossiers
+[xpert] Model request failed in people; using deterministic fallback (ModelError)
+[xpert] 3/5 Extracting tasks in chronological conversation windows
+[xpert] Model request failed in loops; using deterministic fallback (ModelError)
+[xpert] 4/5 Reviewing unresolved tasks against later evidence
+[xpert] Model request failed in closure; using deterministic fallback (ModelError)
+[xpert] 5/5 Selecting grounded goals and validating output
+[xpert] Wrote provider-error.json: 5 people, 2 organisations, 2 loops in 0.00s
+----------------------------------------------------------------------
+Ran 62 tests in 1.618s
+
+OK

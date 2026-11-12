@@ -1,0 +1,61 @@
+test_auth_failure_is_not_silently_offline (test_core.ClientTests.test_auth_failure_is_not_silently_offline) ... ok
+test_json_fences_and_no_partial_object_recovery (test_core.ClientTests.test_json_fences_and_no_partial_object_recovery) ... ok
+test_usage_cache_and_retry_json_mode_compatibility (test_core.ClientTests.test_usage_cache_and_retry_json_mode_compatibility) ... ok
+test_acknowledgement_is_not_execution (test_core.CoreTests.test_acknowledgement_is_not_execution) ... ok
+test_arbitrary_ids_and_names_supported (test_core.CoreTests.test_arbitrary_ids_and_names_supported) ... [xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote renamed.json: 5 people, 2 organisations, 2 loops in 0.01s
+ok
+test_batch_source_boundary (test_core.CoreTests.test_batch_source_boundary) ... ok
+test_cross_chat_or_earlier_closure_rejected (test_core.CoreTests.test_cross_chat_or_earlier_closure_rejected) ... ok
+test_different_payment_amounts_not_merged (test_core.CoreTests.test_different_payment_amounts_not_merged) ... ok
+test_explicit_later_completion (test_core.CoreTests.test_explicit_later_completion) ... ok
+test_external_action_needs_yes (test_core.CoreTests.test_external_action_needs_yes) ... ok
+test_goals_need_real_user_evidence (test_core.CoreTests.test_goals_need_real_user_evidence) ... ok
+test_hallucinated_source_or_owner_rejected (test_core.CoreTests.test_hallucinated_source_or_owner_rejected) ... ok
+test_input_line_order_does_not_change_output (test_core.CoreTests.test_input_line_order_does_not_change_output) ... [xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote first.json: 5 people, 2 organisations, 2 loops in 0.00s
+[xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote second.json: 5 people, 2 organisations, 2 loops in 0.00s
+ok
+test_offline_never_reads_answers_and_meets_schema (test_core.CoreTests.test_offline_never_reads_answers_and_meets_schema) ... [xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote result.json: 5 people, 2 organisations, 2 loops in 0.00s
+ok
+test_other_persons_work_stays_quiet (test_core.CoreTests.test_other_persons_work_stays_quiet) ... ok
+test_private_draft_can_proceed (test_core.CoreTests.test_private_draft_can_proceed) ... ok
+test_reasonable_model_reminder_time_is_preserved (test_core.CoreTests.test_reasonable_model_reminder_time_is_preserved) ... ok
+test_relative_due_uses_message_ist (test_core.CoreTests.test_relative_due_uses_message_ist) ... ok
+test_reminder_is_after_snapshot (test_core.CoreTests.test_reminder_is_after_snapshot) ... ok
+test_seed_then_user_correction (test_core.CoreTests.test_seed_then_user_correction) ... ok
+test_voice_text_and_all_chunk_sources_preserved (test_core.CoreTests.test_voice_text_and_all_chunk_sources_preserved) ... ok
+test_wrong_types_from_model_do_not_crash_normalization (test_core.CoreTests.test_wrong_types_from_model_do_not_crash_normalization) ... ok
+test_complete_model_protocol_and_cold_cache_replay (test_core.PipelineTests.test_complete_model_protocol_and_cold_cache_replay) ... ok
+test_twenty_thousand_messages_in_clean_offline_run (test_core.PipelineTests.test_twenty_thousand_messages_in_clean_offline_run) ... [xpert] No configured model: running the deterministic zero-cost baseline (goals omitted)
+[xpert] Wrote large-output.json: 320 people, 1 organisations, 2560 loops in 0.97s
+ok
+test_binary_decision_answer_can_close_question (test_recovery.RecoveryTests.test_binary_decision_answer_can_close_question) ... ok
+test_client_budget_does_not_count_unsent_attempts (test_recovery.RecoveryTests.test_client_budget_does_not_count_unsent_attempts) ... ok
+test_contextless_done_does_not_close_execution (test_recovery.RecoveryTests.test_contextless_done_does_not_close_execution) ... ok
+test_future_promise_does_not_close_execution (test_recovery.RecoveryTests.test_future_promise_does_not_close_execution) ... ok
+test_graph_missing_object_retains_fallback (test_recovery.RecoveryTests.test_graph_missing_object_retains_fallback) ... ok
+test_graph_non_array_fields_retain_fallback (test_recovery.RecoveryTests.test_graph_non_array_fields_retain_fallback) ... ok
+test_local_call_budget_does_not_discard_valid_output (test_recovery.RecoveryTests.test_local_call_budget_does_not_discard_valid_output) ... [xpert] 1/5 Building the organisation graph
+[xpert] 2/5 Classifying people from their cross-chat dossiers
+[xpert] 3/5 Extracting tasks in chronological conversation windows
+[xpert] 4/5 Reviewing unresolved tasks against later evidence
+[xpert] 5/5 Selecting grounded goals and validating output
+[xpert] Wrote budget-output.json: 5 people, 2 organisations, 2 loops in 0.01s
+ok
+test_model_can_attach_a_direct_chat_to_organisation (test_recovery.RecoveryTests.test_model_can_attach_a_direct_chat_to_organisation) ... ok
+test_negated_completion_stays_open (test_recovery.RecoveryTests.test_negated_completion_stays_open) ... ok
+test_output_cannot_overwrite_input (test_recovery.RecoveryTests.test_output_cannot_overwrite_input) ... ok
+test_schema_rejects_dual_chat_assignment (test_recovery.RecoveryTests.test_schema_rejects_dual_chat_assignment) ... ok
+test_schema_rejects_unknown_nested_fields (test_recovery.RecoveryTests.test_schema_rejects_unknown_nested_fields) ... ok
+test_self_only_chat_has_valid_assignment (test_recovery.RecoveryTests.test_self_only_chat_has_valid_assignment) ... ok
+test_spouses_independent_overdue_plan_stays_quiet (test_recovery.RecoveryTests.test_spouses_independent_overdue_plan_stays_quiet) ... ok
+test_thanks_does_not_close_question (test_recovery.RecoveryTests.test_thanks_does_not_close_question) ... ok
+test_wrong_actors_yes_does_not_close_decision (test_recovery.RecoveryTests.test_wrong_actors_yes_does_not_close_decision) ... ok
+
+----------------------------------------------------------------------
+Ran 40 tests in 1.848s
+
+OK

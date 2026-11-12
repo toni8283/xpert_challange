@@ -1,0 +1,11 @@
+{
+  "status": "not_live_benchmarked",
+  "release_default": "offline",
+  "optional_candidate": "baidu/ernie-5.5-flash-preview:free",
+  "real_model_called": false,
+  "private_dataset_sent_to_new_provider": false,
+  "reason": "No runtime credentials; provider privacy suitability and real-data authorisation unresolved.",
+  "integration": "Local synthetic HTTP five-stage protocol/cache replay passed",
+  "synthetic_probe": "blocked_missing_credentials",
+  "provider_cost_usd": 0
+}
