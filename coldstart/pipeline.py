@@ -227,10 +227,13 @@ def main(input_dir, output_path):
     if mode not in {"auto", "offline", "model"}:
         raise ValueError("XPERT_MODE must be auto, offline or model")
     configured = [bool(os.getenv(k)) for k in ("LLM_BASE_URL", "LLM_API_KEY", "LLM_MODEL")]
+    task_review = os.getenv("XPERT_TASK_REVIEW", "0") == "1"
     no_model = os.getenv("LLM_MODEL", "").strip().lower() in {"none", "offline"}
+    if task_review and (mode == "model" or not all(configured) or no_model):
+        raise ValueError("Task-only review needs all LLM_* variables and XPERT_MODE=offline (or auto), not full model mode")
     if mode == "model" and no_model:
         raise ValueError("Model mode needs an actual model ID, not none/offline")
-    wants_model = mode != "offline" and not (mode == "auto" and no_model)
+    wants_model = mode != "offline" and not task_review and not (mode == "auto" and no_model)
     if wants_model and any(configured) and not all(configured):
         raise ValueError("Set all three of LLM_BASE_URL, LLM_API_KEY, LLM_MODEL, or use XPERT_MODE=offline")
     if mode == "model" and not all(configured):
@@ -254,7 +257,7 @@ def main(input_dir, output_path):
                                     "input_usd_per_million": in_price, "output_usd_per_million": out_price,
                                     "note": "Assumed prices, not billing. Set price environment variables for a different model/provider. Cached calls cost zero on this run."}
     else:
-        say("No configured model: running the deterministic zero-cost baseline (goals omitted)")
+        say("Running deterministic extraction; task-only model review enabled" if task_review else "No configured model: running the deterministic zero-cost baseline (goals omitted)")
         result = offline(corpus)
         result["people"] = normalize_people([], result["people"], corpus, result, corrections)
         apply_chat_corrections(result, corrections)
@@ -264,6 +267,22 @@ def main(input_dir, output_path):
         result["open_loops"] = [loop for loop in result["open_loops"] if loop is not None]
         metrics["usage"] = {"api_calls": 0, "cache_hits": 0, "prompt_tokens": 0, "completion_tokens": 0}
         metrics["cost_estimate"] = {"usd": 0, "usd_per_1000_messages": 0}
+        if task_review:
+            from .task_review import review_completions
+            budget = min(1500, max(10, int(os.getenv("XPERT_TASK_REVIEW_SECONDS", "300"))))
+            cache = Path(os.getenv("XPERT_CACHE_DIR", str(output.parent / ".xpert-cache")))
+            client = Client(run_dir, cache, started + budget)
+            output_tokens = min(16000, max(64, int(os.getenv("XPERT_TASK_REVIEW_OUTPUT_TOKENS", "256"))))
+            metrics["task_review"] = review_completions(corpus, result["open_loops"], client, output_tokens)
+            metrics["mode"] = "offline+task_review"
+            metrics["model"] = client.model
+            client.stats["request_attempts"] = client.calls
+            metrics["usage"] = client.stats
+            in_price = float(os.getenv("LLM_INPUT_PRICE_PER_MILLION", ".15"))
+            out_price = float(os.getenv("LLM_OUTPUT_PRICE_PER_MILLION", ".60"))
+            cost = (client.stats["prompt_tokens"] * in_price + client.stats["completion_tokens"] * out_price) / 1e6
+            metrics["cost_estimate"] = {"usd": round(cost, 6), "usd_per_1000_messages": round(cost * 1000 / max(1, len(corpus.messages)), 6),
+                                        "note": "Assumed token prices, not billing; set prices for the actual provider/model. Failed requests may have unreported usage."}
     schema = json.loads((Path(__file__).resolve().parents[1] / "schema.json").read_text(encoding="utf-8"))
     errors = validate(result, corpus.chats, corpus.messages) + schema_errors(result, schema)
     if errors:

@@ -113,8 +113,33 @@ For measured failure categories and cost assumptions, see the required [WRITEUP.
 
 ## Privacy, reproducibility, and AI development records
 
-The repository excludes challenge conversation datasets, answer keys, generated private predictions, model caches, and API credentials. Do not commit those files or transmit private conversations to an unapproved model provider. The code uses the configured model endpoint only in explicitly enabled model mode.
+The repository excludes challenge conversation datasets, answer keys, generated private predictions, model caches, and API credentials. Do not commit those files or transmit private conversations to an unapproved model provider. The code uses the configured model endpoint only when explicitly enabled with `XPERT_MODE=model` or the task-only `XPERT_TASK_REVIEW=1` option below.
 
 The required [`ai-logs/`](ai-logs) directory contains authentic development-session records and clearly marked partial transcripts. These logs are part of the assessment's AI-tool transparency requirements.
 
 Additional documentation: [submission guide](SUBMISSION.md) · [evaluation report](EVALUATION.md) · [model-selection notes](MODEL_SELECTION.md) · [interview preparation](INTERVIEW_PREP.md).
+
+## Experimental task-only completion review
+
+This feature branch adds an opt-in review of unresolved task statuses. It does not change people, organisations, chat assignments, task extraction, owners or source IDs. The stable published offline release remains the submission fallback. No main-branch merge is authorised.
+
+A model can confirm completion/cancellation that lexical rules rejected (for example, a contextual "Done" or a paraphrase). Structural checks still require a listed later message from the same chat. Semantic acknowledgement/future-word filters are deliberately not reapplied after the model verdict. The model can still be wrong: there is **no measured real-model score improvement**. Task-source retrieval and the loops-found metric are unchanged by this feature.
+
+Use any **OpenAI-compatible** local server or cloud API through the existing `llm.Client`, or inject an adapter implementing `JSONModel.json` into `review_completions`. A local example, after starting your own server:
+
+```bash
+# Dummy key is for a local server that ignores authentication only.
+LLM_BASE_URL=http://localhost:8000/v1 \
+LLM_API_KEY=local-unused \
+LLM_MODEL=your-local-model-id \
+XPERT_MODE=offline XPERT_TASK_REVIEW=1 \
+./run.sh <input_dir> <output.json>
+```
+
+For a cloud provider, configure its actual base URL/model and inject credentials securely through the environment. Do not send private conversations until that provider has been authorised. Enabling task-only review with full `XPERT_MODE=model` is rejected to prevent accidentally changing the graph/person stages.
+
+Token controls: 71-word system prompt; full source plus at most ten short later candidates and one preceding context message; numeric speaker/message references; shared text deduplicated within each batch; up to eight tasks / 6,000 compact JSON characters; sparse numeric verdicts with no explanation; private response caching. Long candidate bodies are skipped instead of presenting clipped text as proof. Retrieval can miss distant semantic paraphrases and cross-chat evidence. Character limits are not exact tokenizer counts, and reasoning models may consume additional reasoning tokens.
+
+Output cap: `XPERT_TASK_REVIEW_OUTPUT_TOKENS=256` by default, configurable up to 16,000 for models needing more reasoning/output space. Time budget: `XPERT_TASK_REVIEW_SECONDS=300`. Existing `XPERT_MAX_CALLS`, free-route restrictions and rate pacing apply. Invalid responses, provider failures and budget exhaustion retain the baseline task for the affected batch. Metrics report actual returned token counts and accepted/invalid verdicts; estimated prices must be set for the actual provider.
+
+Verification on this branch: **75 tests passed**, including 13 new synthetic review/integration/cache regressions. Offline development score remains **26.008092745190027/56** with zero API calls. A dry construction of dev requests produced 36 batches for 257 eligible unresolved tasks, maximum 5,312 input JSON characters; no model received those requests. Mock verdicts establish integration behavior, not semantic accuracy or a live-model benchmark.
