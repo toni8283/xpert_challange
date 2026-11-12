@@ -11,7 +11,7 @@
 | Official checker and schema | Byte-for-byte identical to supplied originals |
 | Python | 3.9 syntax compatibility checked; execution on installed Python |
 | Real provider inference | **Not run: credentials unavailable** |
-| Publication | Public target: `toni8283/xpert_challange`; verify remote SHA separately |
+| Publication | Public GitHub repository verified; submit the current remote `main` commit SHA |
 | Form | User submits personally; not submitted by this program |
 
 On 4,502 messages, 138 chats and 286 people, runtime is approximately one second. Zero provider calls/tokens; **$0/1,000 messages**. `reports/dev-offline.json` contains aggregate official-checker measurements. Goals/help are unlabelled, not zero. These are development results, not hidden-set forecasts.
@@ -40,4 +40,4 @@ No identities, answer labels or message IDs were added to inference. Current reg
 
 The suite covers real local HTTP protocol, all five stages, private caches, graceful partial-budget/provider fallback, malformed outputs, source windows, renaming/shuffling, voice text, dates, false closures, binary decision actors, source grounding, relationship protections and schema compliance. Simulated requests are not evidence of real-model performance. Public catalogue research and a blocked synthetic-only probe are recorded separately.
 
-Remaining weaknesses: over-produced conversational obligations, sparse relationships, implicit multilingual requests, ambiguous ownership and distant/cross-chat completion. Offline goals are intentionally omitted. The release excludes supplied inputs, keys, answer files, predictions and caches; historical AI logs are preserved as partial records. The user supplied the existing public repository `toni8283/xpert_challange`, resolving the earlier repository-creation blocker. No collaborator invitation or form submission has occurred. Public evaluator access needs no invitation.
+Remaining weaknesses: over-produced conversational obligations, sparse relationships, implicit multilingual requests, ambiguous ownership and distant/cross-chat completion. Offline goals are intentionally omitted. The release excludes supplied inputs, keys, answer files, predictions and caches; historical AI logs are preserved as partial records. The published repository is public at `https://github.com/toni8283/xpert_challange`. Its release commit was verified on GitHub. No collaborator invitation is needed for public evaluator access. The applicant must complete the official assessment form separately.

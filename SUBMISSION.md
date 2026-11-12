@@ -21,15 +21,15 @@ The free candidate `baidu/ernie-5.5-flash-preview:free` is publicly listed but h
 
 ## Repository and exact commit
 
-Public repository: https://github.com/toni8283/xpert_challange . The connected integration has verified that it exists and permits uploads. Public repositories need no evaluator invitation. No collaborator has been invited.
+Public repository: https://github.com/toni8283/xpert_challange . The source has been published on `main` and the GitHub integration verified its contents. Public repositories need no evaluator invitation. No collaborator has been invited.
 
-Verify the branch head after publishing:
+Verify the current remote branch head (use the exact SHA for grading):
 
 ```bash
 git ls-remote https://github.com/toni8283/xpert_challange.git refs/heads/main
 ```
 
-Use the full 40-character remote SHA in the submission form. The enclosing release manifest records the remote publication SHA when verified. The bundle preserves the recovered local development history; connector-created remote commits can have a different SHA. Do not confuse the two histories.
+Use the full 40-character remote SHA in the submission form. The GitHub commit SHA—not a local Git bundle or older checkpoint SHA—is the one to enter in the form. Any new documentation or source commit changes that SHA. If already submitted, submit the form again with the latest intended SHA before the deadline.
 
 ## Submit personally
 
@@ -37,7 +37,7 @@ Open [the official assessment](https://goals.xpert.chat/w/intern), go to Submit,
 
 1. Your full name and the email used to register.
 2. The public URL `https://github.com/toni8283/xpert_challange`, after verifying its files and main SHA.
-3. The full 40-character SHA verified on remote main (recorded in the outer manifest).
+3. The full 40-character SHA currently on remote main, as returned by the command above.
 4. Model: `baidu/ernie-5.5-flash-preview:free` as the optional listed candidate.
 5. Additional information: "This commit defaults to deterministic offline inference, makes zero model calls, and scored 26.0081/56 on development data. The optional model path is not live-benchmarked."
 
